@@ -1,0 +1,40 @@
+@function spring-wobbly($t) {
+    @return -0.5 * pow(2.71828, (-6 * $t)) * (-2 * pow(2.71828, (6 * $t)) + sin(12 * $t) + 2 * cos(12 * $t));
+}
+@function lerp($a, $b, $p) { 
+  @return $a + $p * ($b - $a); 
+}
+
+.root-sidebar{
+  width: 300px;
+  height: 100%;
+  background: #808080;
+
+}
+.on-sidebar{
+  transform: translateX(0);
+  animation: sidebarMovementX 1s cubic-bezier(0.1, 0.3, 0.5, 1.0);; 
+  animation-fill-mode: both;
+}
+.off-sidebar{
+  animation: sidebarMovement 1s cubic-bezier(0.1, 0.3, 0.5, 1.0);
+  animation-fill-mode: both;
+}
+
+//收缩动画
+@keyframes sidebarMovement {
+  @for $i from 0 through 100 { 
+    #{$i}% { 
+      width:  lerp(300,50, spring-wobbly($i / 200)) + px; 
+    }
+  }
+}
+//弹出动画
+@keyframes sidebarMovementX {
+  @for $i from 0 through 100 { 
+    #{$i}% { 
+      width:  lerp( 50,300, spring-wobbly($i / 200)) + px ; 
+    }
+  }
+ 
+}
