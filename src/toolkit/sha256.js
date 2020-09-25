@@ -115,7 +115,7 @@ self.hash = [ 0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05
 self.addEventListener('message', function (event) {
 
     var uint8_array, message, block, nBitsTotal, output, nBitsLeft, nBitsTotalH, nBitsTotalL;
-
+    console.log('event',event)
     uint8_array = new Uint8Array(event.data.message);
     message = bytesToWords(uint8_array);
     block = event.data.block;
@@ -143,8 +143,7 @@ self.addEventListener('message', function (event) {
         self.hash = sha256(message, self.hash);
     }
     message = null;
-
+    //output ={}
     self.postMessage(output);
 
 }, false)
-

@@ -44,6 +44,10 @@ import CryptoJS  from 'crypto-js'
           var hash = CryptoJS.SHA256(wordArray).toString();
           console.log('SHA256:',hash)
         }
+        //切片读取
+        function sliceFile(){
+          
+        }
       },
       inputChangeB(e){
         console.log(e.target.files[0])
@@ -66,7 +70,7 @@ import CryptoJS  from 'crypto-js'
           worker = new Worker( '../toolkit/sha256.js', { type: 'module' });
           // 监听多线程
           worker.addEventListener('message', this.handleWorkerEvent(currentFile));
-
+          console.log('worker',worker)
           workers.push(worker);
           //执行计算
           this.hashFile(currentFile, workers);
@@ -85,19 +89,20 @@ import CryptoJS  from 'crypto-js'
         block.end = bufferSize > file.size ? file.size : bufferSize; 
         // 线程数
         let threads = 0; 
-        //设置监听Work线程的message，如果读取完成就继续分块读取
+        //给每一个文件设置监听Work线程的message，如果读取完成就继续分块读取
         for (i = 0; i < workers.length; i += 1) {
           workers[i].addEventListener('message', handleHashBlock);
         }
         reader = new FileReader();
-        //文件分块
+        //第一次文件分块
         blob = file.slice(block.start, block.end);
         // 开始读取分块
         reader.readAsArrayBuffer(blob);
-        //文件读取成功回调
+        //文件读取成功都会调用这个方法
         reader.onload = function(event){
           for( i = 0; i < workers.length; i += 1) {
             threads += 1;// 线程数+1
+            //跟new Worker()通讯，worker收到消息后执行继续分块的方法
             workers[i].postMessage({
               'message' : event.target.result,
               'block' : block
