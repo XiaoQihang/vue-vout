@@ -4,11 +4,14 @@
     <input type="file" @change="inputChangeA" />
     <h1>脚本读取文件</h1>
     <input type="file" @change="inputChangeB" />
+    <h1>pbs文件预览</h1>
+    <button @click="inputChangeX"></button>
   </div>
 </template>
 
 <script>
-import CryptoJS  from 'crypto-js'
+import CryptoJS  from 'crypto-js';
+import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min.js'
   export default {
     data() {
       return {
@@ -30,6 +33,28 @@ import CryptoJS  from 'crypto-js'
       }
     },
     methods:{
+
+      inputChangeX(){
+          const obsClient = new ObsClient({
+            access_key_id: "KEYCR8EAOKDERNDWC5UL",
+            secret_access_key: "LvwEbZ0DpXrV6HIwLYi8gfKAEqxOA0nXFpp4TAU6",
+            server: "https://obs.cn-south-1.myhuaweicloud.com",
+          });
+          // console.log(obsClient)
+          function downloadObsFile(fileKey) {
+            var res = obsClient.createSignedUrlSync({
+              Method : 'GET',
+              Bucket : 'prod-ubq',
+              Key : fileKey,
+              Expires : 3600,
+            });
+            return res.SignedUrl // 返回的是文件地址
+          }
+
+          let url = 'obs_641582d280129c15c85819f0933adbd0CAM08+7_00026.png';
+          let res = downloadObsFile(url);
+          console.log(res);
+      },
       inputChangeA(e){
         let files = e.target.files[0];
     	  //生成实例
@@ -132,7 +157,6 @@ import CryptoJS  from 'crypto-js'
         return (event)=> {
           if (event.data.result) {
             this.fileDigestResult = event.data.result;
-            localStorage.setItem('fileHashList',JSON.stringify(this.fileHashList));
             console.log('计算结果为---------------:'+this.fileDigestResult)
           } else {
             console.log('当前进度-----:',(event.data.block.end * 100 / event.data.block.file_size).toFixed(2) + '%')
