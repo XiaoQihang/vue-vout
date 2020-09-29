@@ -56,22 +56,47 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
           console.log(res);
       },
       inputChangeA(e){
+        //init
+        let dataList = [];
+        let size = 10*1024;
+        let start = 0;
+        let end = size;
+        let i = 1;
+        //获取文件实例
         let files = e.target.files[0];
+        let max =Math.ceil(files.size/size);
     	  //生成实例
         let fileReads = new FileReader();
-    	  //开始读取文件
-        fileReads.readAsArrayBuffer(files);
+        //开始切片
+        sliceFile(files);
         //读取回调
         fileReads.onload=function(){
-          console.log('读取结果(文件数据类型：ArrayBuffer):',fileReads.result)
           var wordArray = CryptoJS.lib.WordArray.create(fileReads.result);
           console.log('ArrayBuffer转为WordArray格式:',wordArray)
-          var hash = CryptoJS.SHA256(wordArray).toString();
-          console.log('SHA256:',hash)
+          if(i === 1){
+            //保存首次wordArray格式 
+            dataList = wordArray;
+          }else{
+            for(let o of wordArray.words){
+              dataList.words.push(o);
+            }
+            dataList.sigBytes += wordArray.sigBytes
+          }
+          i++
+          if(i > max){
+            var hash = CryptoJS.SHA256(dataList).toString();
+            console.log('SHA256:',hash)
+          }else{
+            sliceFile(files)
+          }
         }
         //切片读取
-        function sliceFile(){
-          
+        function sliceFile(data){
+          start = i===1?0:(i-1)*size;
+          end = i*size;
+          if(i <= max){
+            fileReads.readAsArrayBuffer(data.slice(start,end));
+          }
         }
       },
       inputChangeB(e){
