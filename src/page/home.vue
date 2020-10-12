@@ -1,13 +1,12 @@
 <template>
   <div id="root">
-    
-    <effSidebar class="sidebar">
-    </effSidebar>
-
-    <effContent class="content">
-      <router-view></router-view>
-    </effContent>
-    
+    <effAppBar class="head"></effAppBar>
+    <div>
+      <effSidebar class="sidebar"></effSidebar>
+      <effContent class="content">
+        <router-view></router-view>
+      </effContent>
+    </div>
   </div>
 </template>
 
@@ -15,11 +14,13 @@
  import draggable from 'vuedraggable';
  import effSidebar from '../component/effSidebar';
  import effContent from '../component/effContent';
+ import effAppBar from '../component/effAppBar';
 
 export default {
   components: {
     effSidebar,
-    effContent
+    effContent,
+    effAppBar
   },
   data(){
     return {
@@ -33,8 +34,9 @@ export default {
 
 #root{
   display: flex;
+  flex-direction:column;
   height: 100%;
-  .content{
+  div{
     flex: 1;
   }
 }

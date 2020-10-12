@@ -2,3 +2,11 @@
 html,body{
     height: 100%;
 }
+li{
+    list-style: none;
+}
+.clearFloat::after{
+    content: "";
+    display: block;
+    clear: both;
+}
