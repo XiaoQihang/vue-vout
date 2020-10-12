@@ -110,6 +110,7 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
         compress: true, // 开启Gzip压缩
         stats: "none",//不打印信息
+        clientLogLevel: "none",
         port: 8088,
         hot:true,
         open:true,

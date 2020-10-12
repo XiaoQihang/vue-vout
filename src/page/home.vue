@@ -1,15 +1,13 @@
 <template>
   <div id="root">
+    
     <effSidebar class="sidebar">
-      <ul>
-        <router-link to="/fileRead">
-          文件处理
-        </router-link>
-      </ul>
     </effSidebar>
+
     <effContent class="content">
       <router-view></router-view>
     </effContent>
+    
   </div>
 </template>
 

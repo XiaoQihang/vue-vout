@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1>普通读取文件</h1>
+    <h1>计算文件SHA256</h1>
     <input type="file" @change="inputChangeA" />
     <h1>脚本读取文件</h1>
     <input type="file" @change="inputChangeB" />
     <h1>pbs文件预览</h1>
-    <button @click="inputChangeX"></button>
+    <button @click="inputChangeX" style="width:50px;height:50px"></button>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
         fileDigestResult:null,
         filesA:null,
         filesB:null,
+        worker:null,
       }
     },
     created(){
@@ -56,47 +57,18 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
           console.log(res);
       },
       inputChangeA(e){
-        //init
-        let dataList = [];
-        let size = 10*1024;
-        let start = 0;
-        let end = size;
-        let i = 1;
         //获取文件实例
-        let files = e.target.files[0];
-        let max =Math.ceil(files.size/size);
-    	  //生成实例
-        let fileReads = new FileReader();
-        //开始切片
-        sliceFile(files);
-        //读取回调
-        fileReads.onload=function(){
-          var wordArray = CryptoJS.lib.WordArray.create(fileReads.result);
-          console.log('ArrayBuffer转为WordArray格式:',wordArray)
-          if(i === 1){
-            //保存首次wordArray格式 
-            dataList = wordArray;
-          }else{
-            for(let o of wordArray.words){
-              dataList.words.push(o);
-            }
-            dataList.sigBytes += wordArray.sigBytes
-          }
-          i++
-          if(i > max){
-            var hash = CryptoJS.SHA256(dataList).toString();
-            console.log('SHA256:',hash)
-          }else{
-            sliceFile(files)
-          }
-        }
-        //切片读取
-        function sliceFile(data){
-          start = i===1?0:(i-1)*size;
-          end = i*size;
-          if(i <= max){
-            fileReads.readAsArrayBuffer(data.slice(start,end));
-          }
+        let files = e.target.files;
+        let i, workers, worker, cryptoFiles, cryptoAlgos;
+        // 支持上传多文件
+        for (i = 0; i < files.length; i += 1) {
+          let currentFile = files[i];
+          workers = [];
+          cryptoAlgos = []; // 内置加密 集合
+          worker = new Worker('../toolkit/sha256.js', { type: 'module' });
+          worker.addEventListener('message', this.handleWorkerEvent(currentFile));
+          workers.push(worker);
+          this.hashFile(currentFile, workers);
         }
       },
       inputChangeB(e){
@@ -126,40 +98,23 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
           this.hashFile(currentFile, workers);
         }
       },
-      // worker计算
+      // worker加密
       hashFile(file, workers){
-        let i, reader, blob, handleHashBlock, handleLoadBlock;
-        // 块大小默认 1M
-        let bufferSize = 64 * 16 * 1024;
-        let block = {
-          'file_size' : file.size,
-          'start' : 0
-        };
-        // 源文件大小和块的单位大小对比 取小者
-        block.end = bufferSize > file.size ? file.size : bufferSize; 
-        // 线程数
-        let threads = 0; 
-        //给每一个文件设置监听Work线程的message，如果读取完成就继续分块读取
-        for (i = 0; i < workers.length; i += 1) {
-          workers[i].addEventListener('message', handleHashBlock);
-        }
-        reader = new FileReader();
-        //第一次文件分块
-        blob = file.slice(block.start, block.end);
-        // 开始读取分块
-        reader.readAsArrayBuffer(blob);
-        //文件读取成功都会调用这个方法
-        reader.onload = function(event){
+        let i, bufferSize, block, threads, reader, blob, handleHashBlock, handleLoadBlock;
+
+        // 加载分块
+        handleLoadBlock = (event)=> {
           for( i = 0; i < workers.length; i += 1) {
-            threads += 1;// 线程数+1
-            //跟new Worker()通讯，worker收到消息后执行继续分块的方法
+            threads += 1;
+            console.log(workers[i])
             workers[i].postMessage({
               'message' : event.target.result,
               'block' : block
             });
           }
         };
-        // 文件继续分块
+
+        // 文件分块
         handleHashBlock = (event)=> {
           threads -= 1;
           if(threads === 0) {
@@ -176,6 +131,21 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
             }
           }
         };
+        bufferSize = 64 * 16 * 1024; // 块大小默认 1M
+        block = {
+          'file_size' : file.size,
+          'start' : 0
+        };
+        block.end = bufferSize > file.size ? file.size : bufferSize; // 源文件大小和块的单位大小对比 取小者
+        threads = 0; // 线程数
+        for (i = 0; i < workers.length; i += 1) {
+          workers[i].addEventListener('message', handleHashBlock);
+        }
+        reader = new FileReader();
+        reader.onload = handleLoadBlock;
+        blob = file.slice(block.start, block.end);
+
+        reader.readAsArrayBuffer(blob);
       },
       // worker 计算结果和进度
       handleWorkerEvent(item) {

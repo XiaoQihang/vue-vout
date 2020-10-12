@@ -1,10 +1,18 @@
 <template>
-<div style="height:100%;margin-bottom:20px"  @click.stop="styleHanld">
-  <div :class="style()" style="" >
-   <slot></slot>
+  <div>
+    <div :class="style()">
+      <span  v-show="isSpread" class="btn" @click="styleHanld">《《《《《《《《《《《《《《《《《</span>
+      <span  v-show="!isSpread"  class="btn" @click="styleHanld">》》》》》》》》》》》》》》》》</span>
+       <ul>
+        <router-link to="/fileRead">
+          文件处理
+        </router-link>
+        <router-link to="/test">
+          测试页面
+        </router-link>
+      </ul>
+    </div>
   </div>
-</div>
- 
 </template>
 
 <script>
@@ -18,7 +26,7 @@ export default {
   },
   data(){
     return{
-      switch: 1
+      isSpread: true
     }
   },
   created(){
@@ -26,10 +34,10 @@ export default {
   },
   methods:{
     style(){
-      return this.switch?'root-sidebar on-sidebar':'root-sidebar off-sidebar'
+      return this.isSpread?'root-sidebar on-sidebar':'root-sidebar off-sidebar'
     },
     styleHanld(){
-      this.switch = !this.switch;
+      this.isSpread = !this.isSpread;
     }
   }
 }
@@ -40,4 +48,9 @@ export default {
 @import "../../node_modules/mathsass/dist/math";
 
 @import "../style/sidebar/index.scss";
+.btn{
+  display: block;
+  background: aliceblue;
+  cursor: pointer;
+}
 </style>

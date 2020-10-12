@@ -78,6 +78,7 @@
 }
 //-----------------------------------------------
 ul{width: 300px;border: red;}
+
 ul li{width: 300px;height: 70px;line-height: 70px;background: #fff;text-align: center;cursor: pointer;overflow: hidden;border: 1px solid #eee;}
 ul li:hover .circle{
     animation: circle-opacity 0.5s linear 0s 1;
@@ -113,10 +114,12 @@ ul li a{position: relative;left: -50px;color: #333;top: -30px;}
   height: 100px; 
   text-align: center; 
   line-height: 100px; font-size: 50px; background: tomato; color: #fff;  border-radius: 10px;}
+
 .btn>span:after{ content: ''; position: absolute; background: transparent; border-radius:50%; width: 100%; padding-top: 100%; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(1);}
 .btn:active{ background: orangered;}
 .btn>input[type=checkbox]{display: none}
 .btn:hover >span:after{animation: ripple-in 1s;}
+
 @keyframes ripple-in{
     0% {
         transform: translate(-50%,-50%) scale(0);
