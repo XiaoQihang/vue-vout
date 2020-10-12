@@ -21,12 +21,11 @@ const router = new Router({
         path:'/test',
         name:'测试页面',
         component:testPage
+      },{
+        path:'/fileRead',
+        name:'文件读取',
+        component: fileUpload
       }]
-    },
-    {
-      path:'/fileRead',
-      name:'文件读取',
-      component: fileUpload
     },
     {
       path:'/404',

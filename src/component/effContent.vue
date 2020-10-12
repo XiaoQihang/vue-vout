@@ -1,9 +1,12 @@
 <template>
   <div class="effContent-container">
-    
+    <div class="goBack">返回</div>
     <div class="effContent-SecondaryContainer">
+
       <slot></slot>
+
     </div>
+
   </div>
 </template>
 
@@ -29,5 +32,10 @@ export default {
 </script>
 
 <style lang="scss"  scoped>
-
+.effContent-container{
+  background: #F5F7FA;
+  .effContent-SecondaryContainer{
+    padding: 20px;
+  }
+}
 </style>
