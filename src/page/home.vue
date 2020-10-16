@@ -1,10 +1,12 @@
 <template>
   <div id="root">
     <effAppBar class="head"></effAppBar>
-    <div>
+    <div class="mian">
       <effSidebar class="sidebar"></effSidebar>
       <effContent class="content">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </effContent>
     </div>
   </div>
@@ -36,8 +38,12 @@ export default {
   display: flex;
   flex-direction:column;
   height: 100%;
-  div{
+  .mian{
     flex: 1;
+    display: flex;
+    .content{
+      flex: 1;
+    }
   }
 }
 

@@ -34,7 +34,6 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
       }
     },
     methods:{
-
       inputChangeX(){
           const obsClient = new ObsClient({
             access_key_id: "KEYCR8EAOKDERNDWC5UL",
@@ -73,7 +72,12 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
       },
       inputChangeB(e){
         console.log(e.target.files[0])
-        this.handleReadFile(e.target.files[0])
+        // this.handleReadFile(e.target.files[0])
+        let res = new FileReader();
+        res.readAsArrayBuffer(e.target.files[0])
+        res.onload = (e)=>{
+          console.log(e)
+        }
       },
       // 读取文件 暂时仅支持md5 sha256
       handleReadFile(file) {
