@@ -142,9 +142,7 @@ self.addEventListener('message', function (event) {
 
         output.result = bytesToHex(wordsToBytes(self.hash));
     } else {
-        console.log(message)
         self.hash = sha256(message, self.hash);
-        console.log(self.hash)
     }
     message = null;
     //output ={}
