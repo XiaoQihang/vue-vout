@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss"  scoped>
 .effContent-container{
-  background: #F5F7FA;
+  background: #ffffff;
   .effContent-SecondaryContainer{
     padding: 20px;
   }

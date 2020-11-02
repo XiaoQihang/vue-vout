@@ -39,6 +39,8 @@ export default {
 .effAppBar{
     display: inline-flex;
     height: 90px;
+    -webkit-box-shadow: 0 2px 8px #f0f1f2;
+    box-shadow: 0 2px 8px #f0f1f2;
     .list{
         flex: 1;
         ul{
