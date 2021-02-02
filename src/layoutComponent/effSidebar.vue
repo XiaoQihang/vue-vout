@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <div :class="style()">
-      <span  v-show="isSpread" class="btn" @click="styleHanld">《《《《《《《《《《《《《《《《《</span>
-      <span  v-show="!isSpread"  class="btn" @click="styleHanld">》》》》》》》》》》》》》》》》</span>
-       <ul>
-        <router-link to="/fileRead">
-          文件处理
-        </router-link>
-        <router-link to="/test">
-          测试页面
-        </router-link>
-      </ul>
-    </div>
+  <div class="eff-sidebar" :class="style()">
+    <span  v-show="isSpread" class="btn" @click="styleHanld">《《《《《《《《《《《《《《《《《</span>
+    <span  v-show="!isSpread"  class="btn" @click="styleHanld">》》》》》》》》》》》》》》》》</span>
+      <ul>
+      <router-link to="/fileRead">
+        文件处理
+      </router-link>
+      <router-link to="/test">
+        测试页面
+      </router-link>
+    </ul>
   </div>
 </template>
 

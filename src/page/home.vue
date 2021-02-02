@@ -14,9 +14,9 @@
 
 <script>
  import draggable from 'vuedraggable';
- import effSidebar from '../component/effSidebar';
- import effContent from '../component/effContent';
- import effAppBar from '../component/effAppBar';
+ import effSidebar from '../layoutComponent/effSidebar';
+ import effContent from '../layoutComponent/effContent';
+ import effAppBar from '../layoutComponent/effAppBar';
 
 export default {
   components: {
