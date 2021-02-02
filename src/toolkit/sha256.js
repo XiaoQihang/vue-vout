@@ -19,78 +19,86 @@ var K = [ 0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
           0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 ];
 
 function sha256(m, H) {
+                        var w = [],
+                          a,
+                          b,
+                          c,
+                          d,
+                          e,
+                          f,
+                          g,
+                          h,
+                          i,
+                          j,
+                          t1,
+                          t2;
 
-    var w = [],
-        a, b, c, d, e, f, g, h, i, j,
-        t1, t2;
+                        for (var i = 0; i < m.length; i += 16) {
+                          a = H[0];
+                          b = H[1];
+                          c = H[2];
+                          d = H[3];
+                          e = H[4];
+                          f = H[5];
+                          g = H[6];
+                          h = H[7];
 
-    for (var i = 0; i < m.length; i += 16) {
+                          for (var j = 0; j < 64; j++) {
+                            if (j < 16) w[j] = m[j + i];
+                            else {
+                              var gamma0x = w[j - 15],
+                                gamma1x = w[j - 2],
+                                gamma0 =
+                                  ((gamma0x << 25) | (gamma0x >>> 7)) ^
+                                  ((gamma0x << 14) | (gamma0x >>> 18)) ^
+                                  (gamma0x >>> 3),
+                                gamma1 =
+                                  ((gamma1x << 15) | (gamma1x >>> 17)) ^
+                                  ((gamma1x << 13) | (gamma1x >>> 19)) ^
+                                  (gamma1x >>> 10);
 
-        a = H[0];
-        b = H[1];
-        c = H[2];
-        d = H[3];
-        e = H[4];
-        f = H[5];
-        g = H[6];
-        h = H[7];
+                              w[j] =
+                                gamma0 +
+                                (w[j - 7] >>> 0) +
+                                gamma1 +
+                                (w[j - 16] >>> 0);
+                            }
 
-        for (var j = 0; j < 64; j++) {
+                            var ch = (e & f) ^ (~e & g),
+                              maj = (a & b) ^ (a & c) ^ (b & c),
+                              sigma0 =
+                                ((a << 30) | (a >>> 2)) ^
+                                ((a << 19) | (a >>> 13)) ^
+                                ((a << 10) | (a >>> 22)),
+                              sigma1 =
+                                ((e << 26) | (e >>> 6)) ^
+                                ((e << 21) | (e >>> 11)) ^
+                                ((e << 7) | (e >>> 25));
 
-            if (j < 16) w[j] = m[j + i];
-            else {
+                            t1 = (h >>> 0) + sigma1 + ch + K[j] + (w[j] >>> 0);
+                            t2 = sigma0 + maj;
 
-                var gamma0x = w[j - 15],
-                    gamma1x = w[j - 2],
-                    gamma0  = ((gamma0x << 25) | (gamma0x >>>  7)) ^
-                              ((gamma0x << 14) | (gamma0x >>> 18)) ^
-                               (gamma0x >>> 3),
-                    gamma1  = ((gamma1x <<  15) | (gamma1x >>> 17)) ^
-                              ((gamma1x <<  13) | (gamma1x >>> 19)) ^
-                               (gamma1x >>> 10);
+                            h = g;
+                            g = f;
+                            f = e;
+                            e = (d + t1) >>> 0;
+                            d = c;
+                            c = b;
+                            b = a;
+                            a = (t1 + t2) >>> 0;
+                          }
 
-                w[j] = gamma0 + (w[j - 7] >>> 0) +
-                       gamma1 + (w[j - 16] >>> 0);
-
-            }
-
-            var ch  = e & f ^ ~e & g,
-                maj = a & b ^ a & c ^ b & c,
-                sigma0 = ((a << 30) | (a >>>  2)) ^
-                         ((a << 19) | (a >>> 13)) ^
-                         ((a << 10) | (a >>> 22)),
-                sigma1 = ((e << 26) | (e >>>  6)) ^
-                         ((e << 21) | (e >>> 11)) ^
-                         ((e <<  7) | (e >>> 25));
-
-
-            t1 = (h >>> 0) + sigma1 + ch + (K[j]) + (w[j] >>> 0);
-            t2 = sigma0 + maj;
-
-            h = g;
-            g = f;
-            f = e;
-            e = (d + t1) >>> 0;
-            d = c;
-            c = b;
-            b = a;
-            a = (t1 + t2) >>> 0;
-
-        }
-
-        H[0] = (H[0] + a) | 0;
-        H[1] = (H[1] + b) | 0;
-        H[2] = (H[2] + c) | 0;
-        H[3] = (H[3] + d) | 0;
-        H[4] = (H[4] + e) | 0;
-        H[5] = (H[5] + f) | 0;
-        H[6] = (H[6] + g) | 0;
-        H[7] = (H[7] + h) | 0;
-    }
-
-    return H;
-
-}
+                          H[0] = (H[0] + a) | 0;
+                          H[1] = (H[1] + b) | 0;
+                          H[2] = (H[2] + c) | 0;
+                          H[3] = (H[3] + d) | 0;
+                          H[4] = (H[4] + e) | 0;
+                          H[5] = (H[5] + f) | 0;
+                          H[6] = (H[6] + g) | 0;
+                          H[7] = (H[7] + h) | 0;
+                        }
+                        return H;
+                      }
 
 function bytesToWords(a){
   for(var b=[],c=0,d=0;c<a.length;c++,d+=8){
@@ -117,7 +125,6 @@ self.hash = [ 0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05
 self.addEventListener('message', function (event) {
 
     var uint8_array, message, block, nBitsTotal, output, nBitsLeft, nBitsTotalH, nBitsTotalL;
-    console.log('event',event)
     uint8_array = new Uint8Array(event.data.message);
     message = bytesToWords(uint8_array);
     block = event.data.block;
@@ -130,19 +137,15 @@ self.addEventListener('message', function (event) {
     if (block.end === block.file_size) {
         nBitsTotal = block.file_size * 8;
         nBitsLeft = (block.end - block.start) * 8;
-
         nBitsTotalH = Math.floor(nBitsTotal / 0x100000000);
-        nBitsTotalL = nBitsTotal & 0xFFFFFFFF;
-
+        nBitsTotalL = nBitsTotal & 0xffffffff;
         message[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsTotal % 32);
         message[((nBitsLeft + 64 >>> 9) << 4) + 14] = nBitsTotalH;
         message[((nBitsLeft + 64 >>> 9) << 4) + 15] = nBitsTotalL;
-
         self.hash = sha256(message, self.hash);
 
         output.result = bytesToHex(wordsToBytes(self.hash));
     } else {
-        console.log(message)
         self.hash = sha256(message, self.hash);
         console.log(self.hash)
     }
