@@ -1,6 +1,6 @@
 <template>
   <div class="effContent-container">
-    <div class="goBack">返回</div>
+    <!-- <div class="goBack">返回</div> -->
     <div class="effContent-SecondaryContainer">
       <slot></slot>
     </div>

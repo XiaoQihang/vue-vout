@@ -1,9 +1,10 @@
 <template>
   <div>
-    <ul>
-      <router-link v-for="item in data" :to="'/list/detail'" :key="item.id">
+    <ul> 
+      <li v-for="item in data" @click="$router.push(`/list/detail/${item.id}`)" :key="item.id">
         {{item.name}}
-      </router-link>
+      </li>
+      
     </ul>
   </div>
 </template>
@@ -17,18 +18,21 @@
       }
     },
     created(){
-      console.log('我触发了')
       this.data =[
-        {id:1,name:'测试数据1'},
-        {id:2,name:'测试数据2'},
-        {id:3,name:'测试数据3'},
-        {id:4,name:'测试数据4'},
-        {id:5,name:'测试数据5'},
+        {id:199999999,name:'测试数据1'},
+        {id:288888888,name:'测试数据2'},
+        {id:377777777,name:'测试数据3'},
+        {id:466666666,name:'测试数据4'},
+        {id:555555555,name:'测试数据5'},
       ]
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  
+  ul{
+    li{
+
+    }
+  }
 </style>

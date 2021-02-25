@@ -7,6 +7,9 @@
         文件处理
       </router-link>
       <router-link to="/test">
+        组件页面
+      </router-link>
+      <router-link to="/list">
         测试页面
       </router-link>
     </ul>

@@ -4,6 +4,7 @@ import Router from 'vue-router';
 
 const fileUpload =  resolve => require(['../page/fileRead.vue'], resolve)
 const home = resolve => require(['../page/home.vue'], resolve)
+const indexPage = resolve => require(['../page/index.vue'], resolve)
 const fourPage = resolve => require(['../page/404.vue'], resolve)
 const testPage = resolve => require(['../page/test.vue'], resolve)
 const listPage = resolve => require(['../page/list.vue'], resolve)
@@ -19,9 +20,14 @@ const router = new Router({
     { path: '*', component: fourPage },
     {
       path:'/',
-      name:'首页',
+      name:'管理页面',
       component: home,
+      redirect: '/index',
       children:[{
+        path:'/index',
+        name:'测试页面',
+        component:indexPage
+      },{
         path:'/test',
         name:'测试页面',
         component:testPage
@@ -34,7 +40,7 @@ const router = new Router({
         name:'列表页面',
         component: listPage
       },{
-        path:'/list/detail',
+        path:'/list/detail/:id',
         name:'详情页面',
         component: detailPage
       }]
