@@ -2,7 +2,7 @@
   <div>
     <h1>计算文件SHA256</h1>
     <input type="file" @change="inputChangeA" />
-    <h1>脚本读取文件</h1>
+    <h1>普通读取文件</h1>
     <input type="file" @change="inputChangeB" />
     <h1>pbs文件预览</h1>
     <button @click="inputChangeX" style="width:50px;height:50px"></button>
@@ -40,7 +40,6 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
             secret_access_key: "LvwEbZ0DpXrV6HIwLYi8gfKAEqxOA0nXFpp4TAU6",
             server: "https://obs.cn-south-1.myhuaweicloud.com",
           });
-          // console.log(obsClient)
           function downloadObsFile(fileKey) {
             var res = obsClient.createSignedUrlSync({
               Method : 'GET',
@@ -48,12 +47,10 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
               Key : fileKey,
               Expires : 3600,
             });
-            return res.SignedUrl // 返回的是文件地址
+            return res.SignedUrl
           }
-
           let url = 'obs_641582d280129c15c85819f0933adbd0CAM08+7_00026.png';
           let res = downloadObsFile(url);
-          console.log(res);
       },
       inputChangeA(e){
         //获取文件实例
@@ -72,11 +69,13 @@ import ObsClient from '../toolkit/esdk-obs-browserjs-without-polyfill-3.19.9.min
       },
       inputChangeB(e){
         console.log(e.target.files[0])
-        // this.handleReadFile(e.target.files[0])
         let res = new FileReader();
         res.readAsArrayBuffer(e.target.files[0])
         res.onload = (e)=>{
-          console.log(e)
+          console.log(res)
+          console.log(res.result)
+          let a = CryptoJS.lib.WordArray.init(res.result)
+          console.log(CryptoJS.SHA256(a).toString())
         }
       },
       // 读取文件 暂时仅支持md5 sha256
