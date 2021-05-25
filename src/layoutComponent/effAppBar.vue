@@ -1,12 +1,12 @@
 <template>
   <div class="effAppBar">
       <div class="list">
-          <ul class="clearFloat">
-              <li>
-                <div class="li-item">动画库</div>
+          <ul>
+              <li v-if="hasHome" @click="$router.push({name:'Index'})">
+                <div class="li-item">返回主页</div>
               </li>
-              <li>
-                <div class="li-item">动画库</div>
+              <li v-for="(item,index) in routeInfo" :key="index">
+                <div @click="goPage(item.routeName)" class="li-item">{{item.name}}</div>
               </li>
           </ul>
       </div>
@@ -19,18 +19,29 @@
 export default {
   name: 'eff-appBar',
   props:{
-    
+    routeInfo:{
+      type: Array,
+      default:[]
+    }
   },
   data(){
     return{
-      switch: 1
+      
     }
   },
   created(){
 
   },
+  computed:{
+    hasHome(){
+      console.log(this.$route)
+      return this.$route.name !== 'Index'
+    }
+  },
   methods:{
-
+    goPage(val){
+      this.$router.push({name: val})
+    }
   }
 }
 </script>

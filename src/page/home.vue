@@ -1,6 +1,6 @@
 <template>
   <div id="root">
-    <effAppBar class="head"></effAppBar>
+    <effAppBar class="head" :routeInfo="routeData"></effAppBar>
     <div class="mian">
       <effSidebar class="sidebar"></effSidebar>
       <effContent class="content">
@@ -33,7 +33,10 @@ export default {
   data(){
     return {
       myArray:[],
-
+      routeData:[{
+        name:'学习布局',
+        routeName: 'LearnLayout'
+      }]
     }
   },
   computed: {

@@ -2,6 +2,7 @@
   <div>
     <h1>计算文件SHA256</h1>
     <input type="file" @change="inputChangeA" />
+    <p>计算结果:{{fileDigestResult}}</p>
     <h1>普通读取文件</h1>
     <input type="file" @change="inputChangeB" />
     <h1>pbs文件预览</h1>

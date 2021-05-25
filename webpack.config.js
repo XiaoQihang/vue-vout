@@ -4,9 +4,9 @@ const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 自动生成index.html
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // 清理垃圾文件
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 文本分离插件，分离js和css
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;//依赖包大小图
 const  NowIp = require('./config/ip');//获取当前ip
 const WorkerPlugin = require('worker-plugin');
-console.log(NowIp)
 // 是否为生产环境
 const isProd = process.env.NODE_ENV === 'production';
 //打时间戳
@@ -16,7 +16,7 @@ const _Version = new Date().getTime();
 module.exports = {
     mode: isProd?'production':'development',
     entry:{
-        app: './src/main.js'
+      app: ["babel-polyfill", "./src/main.js"]
     },
     output:{
         filename: 'js/[name].[hash:7].'+_Version +'.js',
@@ -90,13 +90,14 @@ module.exports = {
         new WorkerPlugin(),
         new CleanWebpackPlugin(), // 每次打包之前清理打包目录
         new webpack.BannerPlugin(`xs build at ${Date.now()}`), // 打包后在.js/.css页头的时间
+        new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, './public/index.html'), // 引入模版
             // favicon: path.join(__dirname, '../../src/assets/icon/favicon.ico'),
             filename: 'index.html',
             minify: { // 对index.html压缩
-                collapseWhitespace: isProd,// 去掉index.html的空格
-                removeAttributeQuotes: isProd // 去掉引号
+              collapseWhitespace: isProd,// 去掉index.html的空格
+              removeAttributeQuotes: isProd // 去掉引号
             },
             hash: true // 去掉上次浏览器的缓存（使浏览器每次获取到的是最新的html）
         }),
@@ -109,7 +110,7 @@ module.exports = {
     devServer:isProd?{}:{
         contentBase: path.join(__dirname, 'dist'),
         compress: true, // 开启Gzip压缩
-        stats: "none",//不打印信息
+        // stats: "none",//不打印信息
         clientLogLevel: "none",
         port: 8088,
         hot:true,
