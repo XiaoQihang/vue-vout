@@ -9,8 +9,8 @@
     <!-- 自动滚动 -->
     <div class="auto-srcoll" :style="'height:'+300+'px;overflow: hidden;'">
       <ul ref="effSrcoll" class="effSrcoll" :style="`transform: translateY(${translateY}px);`">
-        <li v-for="(item,i) in 10">
-          <span>{{'测试数据'+i}}</span>
+        <li v-for="(item,i) in listData">
+          <span>{{item.name}}</span>
         </li>
       </ul>
     </div>
@@ -33,8 +33,31 @@ import effButton from '@/component/eff-Button'
     data() {
       return {
         myChart:null,
-        listData:[],
-        translateY:0
+        listData:[
+          {
+            name:'测试数据01'
+          },{
+            name:'测试数据02'
+          },{
+            name:'测试数据03'
+          },{
+            name:'测试数据04'
+          },{
+            name:'测试数据05'
+          },{
+            name:'测试数据06'
+          },{
+            name:'测试数据07'
+          },{
+            name:'测试数据08'
+          },{
+            name:'测试数据09'
+          },{
+            name:'测试数据10'
+          }
+        ],
+        translateY:0,
+        idex:0,
       }
     },
     created(){
@@ -103,9 +126,29 @@ import effButton from '@/component/eff-Button'
     },
     methods:{
       startSrcoll(){
-        const a =setInterval(()=>{
+        let timer =setInterval(()=>{
           this.$refs.effSrcoll.scrollTop++
-        },200)
+          //最大滚动长度 = 当前滚动值 + 当前dom高度
+          let maxHeight = this.$refs.effSrcoll.scrollHeight
+          // 还有三个li的高度时候，对数组进行处理
+          let criticalValue = this.$refs.effSrcoll.scrollTop + this.$refs.effSrcoll.clientHeight + (3 * 31)
+          if ( criticalValue >= maxHeight){
+            this.dataUpdating(this.listData)
+            // clearInterval(timer)
+            // timer = null
+          }
+        },50)
+      },
+      dataUpdating(data){
+        let arr = data[this.idex]
+        this.idex++
+        if (this.idex>data.length){
+          this.idex=0
+        }
+        data.push(arr)
+        if (data){
+
+        }
       },
       srcollDown(){
         let maxHeight = this.$refs.effSrcoll.scrollHeight
