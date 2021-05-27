@@ -36,15 +36,15 @@ const router = new Router({
         component: IndexPage
       },{
         path:'/test',
-        name:'测试页面',
+        name:'Test',
         component:testPage
       },{
         path:'/fileRead',
-        name:'文件处理',
+        name:'FileRead',
         component: fileUpload
       },{
         path:'/list',
-        name:'列表页面',
+        name:'List',
         component: listPage
       },{
         path:'/list/detail/:id',

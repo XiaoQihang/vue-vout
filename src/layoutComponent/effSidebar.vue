@@ -2,28 +2,21 @@
   <div class="eff-sidebar" :class="style()">
     <span  v-show="isSpread" class="btn" @click="styleHanld">《《《《《《《《《《《《《《《《《</span>
     <span  v-show="!isSpread"  class="btn" @click="styleHanld">》》》》》》》》》》》》》》》》</span>
-      <ul>
-      <router-link to="/fileRead">
-        文件处理
-      </router-link>
-      <router-link to="/test">
-        组件页面
-      </router-link>
-      <router-link to="/list">
-        测试页面
-      </router-link>
-    </ul>
+      <ul v-for="(item,index) in routeInfo">
+        <li @click="$router.push({name:item.routeName})"><span>{{item.name}}</span></li>
+      </ul>
   </div>
 </template>
 
 <script>
 
-import draggable from 'vuedraggable';
-
 export default {
   name: 'eff-sidebar',
   props:{
-    
+    routeInfo:{
+      type: Array,
+      default: []
+    }
   },
   data(){
     return{
@@ -49,6 +42,13 @@ export default {
 @import "../../node_modules/mathsass/dist/math";
 
 @import "../style/sidebar/index.scss";
+.eff-sidebar{
+  ul{
+    >li{
+      
+    }
+  }
+}
 .btn{
   display: block;
   background: aliceblue;

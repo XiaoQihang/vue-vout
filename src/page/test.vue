@@ -6,6 +6,17 @@
     <div class="black-bg">
       <effButton type="sparkled" class="color-red">阿萨德</effButton>
     </div>
+    <!-- 自动滚动 -->
+    <div class="auto-srcoll" :style="'height:'+300+'px;overflow: hidden;'">
+      <ul ref="effSrcoll" class="effSrcoll" :style="`transform: translateY(${translateY}px);`">
+        <li v-for="(item,i) in 10">
+          <span>{{'测试数据'+i}}</span>
+        </li>
+      </ul>
+    </div>
+    <button @click="startSrcoll">开始滚动</button>
+    <button @click="srcollDown">向下滚动</button>
+    <!-- 自动滚动 -->
     <div id="main"></div>
   </div>
 </template>
@@ -21,7 +32,9 @@ import effButton from '@/component/eff-Button'
     },
     data() {
       return {
-        myChart:null
+        myChart:null,
+        listData:[],
+        translateY:0
       }
     },
     created(){
@@ -87,6 +100,25 @@ import effButton from '@/component/eff-Button'
       window.onresize = ()=>{ 
         this.myChart.resize()
       }
+    },
+    methods:{
+      startSrcoll(){
+        const a =setInterval(()=>{
+          this.$refs.effSrcoll.scrollTop++
+        },200)
+      },
+      srcollDown(){
+        let maxHeight = this.$refs.effSrcoll.scrollHeight
+        if (this.$refs.effSrcoll.scrollTop+this.$refs.effSrcoll.clientHeight >= maxHeight){
+          console.log('触底了')
+        }else{
+          console.log('还没触底了')
+        }
+        
+      },
+      test(){
+
+      }
     }
   }
 </script>
@@ -96,6 +128,20 @@ import effButton from '@/component/eff-Button'
 #main{
   width: 100%;
   height: 600px;
+}
+.auto-srcoll{
+  width: 500px;
+  padding: 10px;
+  text-align: center;
+  background: rgb(167, 238, 96);
+  ul{
+    height: 100%;
+    overflow: auto;
+  }
+  li{
+    padding: 10px 0;
+    background: chocolate;
+  }
 }
 .black-bg{
   padding: 40px;

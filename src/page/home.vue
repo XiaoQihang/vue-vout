@@ -2,7 +2,7 @@
   <div id="root">
     <effAppBar class="head" :routeInfo="routeData"></effAppBar>
     <div class="mian">
-      <effSidebar class="sidebar"></effSidebar>
+      <effSidebar :routeInfo="sidebarRouteData" class="sidebar"></effSidebar>
       <effContent class="content">
         <keep-alive>
           <router-view></router-view>
@@ -20,9 +20,9 @@
 
 <script>
  import draggable from 'vuedraggable';
- import effSidebar from '../layoutComponent/effSidebar';
- import effContent from '../layoutComponent/effContent';
- import effAppBar from '../layoutComponent/effAppBar';
+ import effSidebar from '@/layoutComponent/effSidebar';
+ import effContent from '@/layoutComponent/effContent';
+ import effAppBar from '@/layoutComponent/effAppBar';
  import { mapState } from 'vuex'
 export default {
   components: {
@@ -36,6 +36,16 @@ export default {
       routeData:[{
         name:'学习布局',
         routeName: 'LearnLayout'
+      }],
+      sidebarRouteData:[{
+        name:'文件处理',
+        routeName: 'FileRead'
+      },{
+        name:'自由测试',
+        routeName: 'Test'
+      },{
+        name:'列表测试',
+        routeName: 'List'
       }]
     }
   },
