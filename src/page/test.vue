@@ -58,6 +58,7 @@ import effButton from '@/component/eff-Button'
         ],
         translateY:0,
         idex:0,
+        liHight:41
       }
     },
     created(){
@@ -123,31 +124,29 @@ import effButton from '@/component/eff-Button'
       window.onresize = ()=>{ 
         this.myChart.resize()
       }
+      // 自动滚动初始化
+      this.scrollInit()
     },
     methods:{
+      scrollInit(){
+        //获取li的高度
+        this.liHight = document.querySelector('.effSrcoll>li').clientHeight
+      },
       startSrcoll(){
         let timer =setInterval(()=>{
-          this.$refs.effSrcoll.scrollTop++
-          //最大滚动长度 = 当前滚动值 + 当前dom高度
-          let maxHeight = this.$refs.effSrcoll.scrollHeight
-          // 还有三个li的高度时候，对数组进行处理
-          let criticalValue = this.$refs.effSrcoll.scrollTop + this.$refs.effSrcoll.clientHeight + (3 * 31)
-          if ( criticalValue >= maxHeight){
+          this.translateY--
+          if ( (this.translateY *-1) > (2 * this.liHight) ) {
             this.dataUpdating(this.listData)
-            // clearInterval(timer)
-            // timer = null
+            this.translateY = -2
           }
         },50)
       },
       dataUpdating(data){
-        let arr = data[this.idex]
-        this.idex++
-        if (this.idex>data.length){
-          this.idex=0
-        }
-        data.push(arr)
-        if (data){
-
+        let lom = JSON.parse(JSON.stringify(data))
+        let arr = data.splice(0,2)
+        let arr2 = lom.splice(0,2)
+        for( let i of arr2){
+          data.push(i)
         }
       },
       srcollDown(){
@@ -174,16 +173,22 @@ import effButton from '@/component/eff-Button'
 }
 .auto-srcoll{
   width: 500px;
-  padding: 10px;
   text-align: center;
-  background: rgb(167, 238, 96);
   ul{
     height: 100%;
-    overflow: auto;
   }
   li{
     padding: 10px 0;
     background: chocolate;
+  }
+  li:nth-child(1){
+    background: rgb(106, 230, 58);
+  }
+  li:nth-child(2){
+    background: rgb(58, 155, 230);
+  }
+  li:nth-child(3){
+    background: rgb(225, 76, 233);
   }
 }
 .black-bg{
