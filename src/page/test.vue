@@ -15,12 +15,13 @@
 
 <script>
 import * as echarts from 'echarts';
-import effButton from '@/component/eff-Button'
-import effSeamlessRoll from '@/component/eff-SeamlessRoll'
-
+import effButton from '@/component/effButton'
+import effSeamlessRoll from '@/component/effSeamlessRoll'
+import effAppBar from '@/layoutComponent/effAppBar'
   export default {
     name: '',
     components:{
+      effAppBar,
       effButton,
       effSeamlessRoll
     },
