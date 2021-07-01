@@ -28,6 +28,7 @@
         data:[],
         dataCoordinate:[],
         insertIndex: null,
+        oldIndex:null
       }
     },
     created(){
@@ -49,15 +50,19 @@
            2. 
           */
           let differs = (item.y - y)
-          if ( differs < 0 && differs < -50 && item.y){
+          if ( differs < 0 && differs > -50 && item.y){
             result.index = i
-          } else if ( differs > 0 && differs > 50 && differs< 100  && item.y){
+            result.val = -1
+          } 
+          if ( differs > 0 && differs > 50 && differs< 100  && item.y){
             result.index = i
+            result.val = 1
           }
           differs = null
         })
         console.log('==========index=========',result.index)
-        return result.index
+        console.log('==========val=========',result.val)
+        return result
       },
       dragLiEvent(event,val,index){
         let domData = this.data[index]
@@ -70,20 +75,18 @@
             //获取所以兄弟元素坐标
             this.getCoordinate()
             if (!hasInsert){
-              this.data[index].hasInsert = true
+              this.data[index].hasInsert = 2
               this.data.splice(index+1,0,{}) // 在原来的位置插入空元素
               hasInsert= true
             }
             var e = e || window.event
             //获取接近哪个dom
-            let _index = this.whetherByMySide(e.clientX,e.clientY)
-            
-            if(this.data[_index]){
-              if (this.data[_index].hasInsert === false && this.data[_index].id && _index !== index+1){
-                this.data.splice(_index+1,0,{name:domData.name,vData:true}) // 在两个元素之间插入虚拟元素（将要插入的元素）
-                this.data[_index].hasInsert = true
-              }
-            }
+            let objDom = this.whetherByMySide(e.clientX,e.clientY)
+            let _index = objDom.val>0? objDom.index: objDom.index -1
+            // 要解决的问题是 防止在一个index 重复插入
+            // 要解决的问题是 插入之后又离开需要清除原有的虚拟dom
+            // 要解决的问题是 插入之后又离开需要清除原有的虚拟dom
+
             dom.style.cssText = "position: fixed;" +'left:'+ (e.clientX - (dom.offsetWidth/2))+ 'px;' +'top:'+(e.clientY - (dom.offsetHeight/2)) + 'px;';
         }
         document.onmouseup = (event)=>{
